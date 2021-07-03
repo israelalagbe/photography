@@ -16,7 +16,7 @@ class CreateProductRequestsTable extends Migration
         Schema::create('product_requests', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description', 1000);
             $table->foreignId('client_id');
             $table->foreignId('photographer_id')->nullable();
             $table->string('reference_code')->unique();

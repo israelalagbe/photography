@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AcceptProductRequest;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
@@ -75,7 +76,7 @@ class ProductRequestController extends Controller
      * Store a newly created resource in storage.
      * @param  StoreProductRequest  $request
      */
-    public function storeProductRequests(StoreProductRequest $request): JsonResponse
+    public function storeProductRequest(StoreProductRequest $request): JsonResponse
     {
         $payload = $request->validated();
 
@@ -95,17 +96,25 @@ class ProductRequestController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param  StoreProductRequest  $request
+     * @param  AcceptProductRequest  $request
      */
-    public function acceptProductRequests(StoreProductRequest $request): JsonResponse
+    public function acceptProductRequest(Request $request): JsonResponse
     {
-        $referenceCode = $request->reference_code;
+        $productRequest = ProductRequest::findOrFail($request->id);
 
-        $productRequest = ProductRequest::where('reference_code', $referenceCode)->first();
+        if ($productRequest->status === 'accepted') {
+            return response()->json([
+                'message' => "You can no longer accept this product request"
+            ], 409);
+        }
 
         $productRequest->status = 'accepted';
         $productRequest->photographer_id = auth()->id();
 
         $productRequest->save();
+
+        return response()->json([
+            'data' => $productRequest
+        ]);
     }
 }

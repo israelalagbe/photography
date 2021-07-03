@@ -27,14 +27,16 @@ Route::group(['prefix' => 'auth',], function () {
 Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], function () {
     Route::get('/', "ProductRequestController@getProductRequests");
 
-    Route::get('/accepted', "ProductRequestController@getAcceptedProductRequests")
-        ->middleware('role:photographer');
 
-    Route::post('/:id/accept', "ProductRequestController@acceptProductRequest")
+
+    Route::get('/accepted', "ProductRequestController@getAcceptedProductRequests")
         ->middleware('role:photographer');
 
     Route::get('/client', "ProductRequestController@getClientProductRequests")
         ->middleware('role:client');
+
+    Route::post('/accept', "ProductRequestController@acceptProductRequest")
+        ->middleware('role:photographer');
 
     Route::post('/', "ProductRequestController@storeProductRequest")
         ->middleware('role:client');
