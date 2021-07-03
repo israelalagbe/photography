@@ -20,7 +20,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors()->first(),
+                'errors' => $validator->errors()
             ], 400);
         }
 
@@ -29,7 +29,7 @@ class AuthController extends Controller
         $token = Auth::attempt($credentials);
 
         if (!$token) {
-            return response()->json(['error' => 'Unauthorized Access', 'status' => 'failed'], 401);
+            return response()->json(['error' => 'Email or password incorrect!', 'status' => 'failed'], 401);
         }
 
         return response()->json([
@@ -51,7 +51,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => $validator->errors()->first(),
+                'errors' => $validator->errors(),
             ], 400);
         }
 
