@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class ProductRequest extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -16,7 +16,8 @@ class Product extends Model
         'user_id',
         'title',
         'description',
-        'reference_code'
+        'reference_code',
+        'status'
     ];
 
     use HasFactory;
