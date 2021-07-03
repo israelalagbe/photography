@@ -27,7 +27,7 @@ Route::group(['prefix' => 'auth',], function () {
 Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], function () {
     Route::get('/', [ProductRequestController::class, 'getProductRequests']);
     Route::get('/accepted', [ProductRequestController::class, 'getAcceptedProductRequests']);
-    Route::get('/users/{user_id}', [ProductRequestController::class, 'getClientProductRequests']);
+    Route::get('/client', [ProductRequestController::class, 'getClientProductRequests']);
 
     Route::post('/', [ProductRequestController::class, 'storeProductRequest']);
 });

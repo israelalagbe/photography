@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductSearchRequest;
 use App\Models\Product;
 use App\Models\ProductRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use \Illuminate\Http\Response;
 
 class ProductRequestController extends Controller
 {
     /**
      * Get all product requests
      *
-     * @return \Illuminate\Http\Response
+     * @param  ProductSearchRequest  $request
      */
-    public function getProductRequests(Request $request)
+    public function getProductRequests(ProductSearchRequest $request): JsonResponse
     {
-        $productRequests = ProductRequest::get();
+        $status = $request->status;
+
+        $productRequests = ProductRequest::query()
+            ->when($status, function ($query) use ($status) {
+                return $query->where('status', '=', $status);
+            })
+            ->simplePaginate(15);
 
         return response()->json([
             'data' => $productRequests
@@ -23,12 +32,25 @@ class ProductRequestController extends Controller
     }
 
     /**
-     * Get all product requests
+     * Get all products requested by a client
      *
-     * @return \Illuminate\Http\Response
+     * @param  ProductSearchRequest  $request
      */
-    public function getClientProductRequests(Request $request)
+    public function getClientProductRequests(ProductSearchRequest $request): JsonResponse
     {
+        $userId = auth()->id();
+        $status = $request->status;
+
+        $productRequests = ProductRequest::query()
+            ->when($status, function ($query) use ($status) {
+                return $query->where('status', '=', $status);
+            })
+            ->where('user_id', $userId)
+            ->simplePaginate(15);
+
+        return response()->json([
+            'data' => $productRequests
+        ]);
     }
 
 
@@ -38,7 +60,7 @@ class ProductRequestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeProductRequests(Request $request)
+    public function storeProductRequests(Request $request): Response
     {
         //
     }
