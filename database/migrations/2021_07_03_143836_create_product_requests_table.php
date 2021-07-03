@@ -18,7 +18,7 @@ class CreateProductRequestsTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->foreignId('client_id');
-            $table->foreignId('freelancer_id')->nullable();
+            $table->foreignId('photographer_id')->nullable();
             $table->string('reference_code')->unique();
             $table->enum('status', ['pending', 'accepted', 'completed']);
             $table->timestamps();
@@ -32,6 +32,6 @@ class CreateProductRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product_requests');
     }
 }

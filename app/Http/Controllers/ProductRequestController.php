@@ -45,7 +45,7 @@ class ProductRequestController extends Controller
             ->when($status, function ($query) use ($status) {
                 return $query->where('status', '=', $status);
             })
-            ->where('user_id', $userId)
+            ->where('client_id', $userId)
             ->simplePaginate(15);
 
         return response()->json([

@@ -28,10 +28,10 @@ Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], fun
     Route::get('/', "ProductRequestController@getProductRequests");
 
     Route::get('/accepted', "ProductRequestController@getAcceptedProductRequests")
-        ->middleware('role:freelancer');
+        ->middleware('role:photographer');
 
     Route::post('/:id/accept', "ProductRequestController@acceptProductRequest")
-        ->middleware('role:freelancer');
+        ->middleware('role:photographer');
 
     Route::get('/client', "ProductRequestController@getClientProductRequests")
         ->middleware('role:client');

@@ -17,6 +17,8 @@ class ProductRequest extends Model
         'title',
         'description',
         'reference_code',
+        'photographer_id',
+        'client_id',
         'status'
     ];
 
