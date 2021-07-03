@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Builder;
 
 class ProductRequest extends Model
 {
@@ -23,4 +24,12 @@ class ProductRequest extends Model
     ];
 
     use HasFactory;
+
+    public function scopeStatus(Builder $query, string $status)
+    {
+        if ($status) {
+            $query->where('status', '=', $status);
+        }
+        return $query;
+    }
 }

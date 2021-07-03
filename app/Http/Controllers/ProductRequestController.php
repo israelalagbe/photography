@@ -18,12 +18,9 @@ class ProductRequestController extends Controller
      */
     public function getProductRequests(ProductSearchRequest $request): JsonResponse
     {
-        $status = $request->status;
 
         $productRequests = ProductRequest::query()
-            ->when($status, function ($query) use ($status) {
-                return $query->where('status', '=', $status);
-            })
+            ->status($request->status)
             ->simplePaginate(15);
 
         return response()->json([
@@ -39,13 +36,31 @@ class ProductRequestController extends Controller
     public function getClientProductRequests(ProductSearchRequest $request): JsonResponse
     {
         $userId = auth()->id();
-        $status = $request->status;
 
         $productRequests = ProductRequest::query()
-            ->when($status, function ($query) use ($status) {
-                return $query->where('status', '=', $status);
-            })
+            ->status($request->status)
             ->where('client_id', $userId)
+            ->simplePaginate(15);
+
+        return response()->json([
+            'data' => $productRequests
+        ]);
+    }
+
+    /**
+     * Get all products requested by a client
+     *
+     * @param  ProductSearchRequest  $request
+     */
+    public function getAcceptedProductRequests(ProductSearchRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+
+        $productRequests = ProductRequest::query()
+            ->status($request->status)
+            ->where([
+                'photographer_id' => $userId,
+            ])
             ->simplePaginate(15);
 
         return response()->json([
