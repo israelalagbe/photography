@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductSearchRequest;
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Models\ProductRequest;
+use Dotenv\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use \Illuminate\Http\Response;
@@ -71,44 +73,39 @@ class ProductRequestController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  StoreProductRequest  $request
      */
-    public function storeProductRequests(Request $request): Response
+    public function storeProductRequests(StoreProductRequest $request): JsonResponse
     {
-        //
+        $payload = $request->validated();
+
+        $payload['client_id'] = auth()->id();
+
+        //Used by photographer to uniquely identify a product at the processing facility
+        $payload['reference_code'] = uniqid('product-');
+
+        $payload['status'] = 'pending';
+
+        $productRequest = ProductRequest::create($payload);
+
+        return response()->json([
+            'data' => $productRequest
+        ]);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * Store a newly created resource in storage.
+     * @param  StoreProductRequest  $request
      */
-    public function showProduct(Product $product)
+    public function acceptProductRequests(StoreProductRequest $request): JsonResponse
     {
-    }
+        $referenceCode = $request->reference_code;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function updateProduct(Request $request, Product $product)
-    {
-        //
-    }
+        $productRequest = ProductRequest::where('reference_code', $referenceCode)->first();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function deleteProduct(Product $product)
-    {
+        $productRequest->status = 'accepted';
+        $productRequest->photographer_id = auth()->id();
+
+        $productRequest->save();
     }
 }
