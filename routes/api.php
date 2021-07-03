@@ -18,16 +18,24 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'auth',], function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', "AuthController@login");
+    Route::post('register', "AuthController@register");
 
-    Route::get('profile', [AuthController::class, 'getProfile'])->middleware('jwt_auth');
+    Route::get('profile', "AuthController@getProfile")->middleware('jwt_auth');
 });
 
 Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], function () {
-    Route::get('/', [ProductRequestController::class, 'getProductRequests']);
-    Route::get('/accepted', [ProductRequestController::class, 'getAcceptedProductRequests']);
-    Route::get('/client', [ProductRequestController::class, 'getClientProductRequests']);
+    Route::get('/', "ProductRequestController@getProductRequests");
 
-    Route::post('/', [ProductRequestController::class, 'storeProductRequest']);
+    Route::get('/accepted', "ProductRequestController@getAcceptedProductRequests")
+        ->middleware('role:freelancer');
+
+    Route::post('/:id/accept', "ProductRequestController@acceptProductRequest")
+        ->middleware('role:freelancer');
+
+    Route::get('/client', "ProductRequestController@getClientProductRequests")
+        ->middleware('role:client');
+
+    Route::post('/', "ProductRequestController@storeProductRequest")
+        ->middleware('role:client');
 });

@@ -36,12 +36,13 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            return response()->json(['data' => 'Oops, something went wrong'], 500);
         });
     }
 
     public function render($request, Throwable $e)
     {
+
         if (!$request->is('api/*')) {
             return parent::render($request, $e);
         }
@@ -50,5 +51,7 @@ class Handler extends ExceptionHandler
 
             return response()->json(['errors' => $e->errors()], 400);
         }
+
+        return response()->json(['error' => $e->getMessage()], 500);
     }
 }
