@@ -70,4 +70,11 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+    public function getProfile()
+    {
+        return response()->json([
+            'data' => Auth::user()
+        ]);
+    }
 }
