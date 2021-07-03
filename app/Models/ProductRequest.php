@@ -25,7 +25,7 @@ class ProductRequest extends Model
 
     use HasFactory;
 
-    public function scopeStatus(Builder $query, string $status)
+    public function scopeStatus(Builder $query, string $status = null)
     {
         if ($status) {
             $query->where('status', '=', $status);

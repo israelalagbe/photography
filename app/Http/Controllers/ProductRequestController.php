@@ -114,6 +114,7 @@ class ProductRequestController extends Controller
         $productRequest->save();
 
         return response()->json([
+            'message' => "Identify the product with your ref code at the processing facility",
             'data' => $productRequest
         ]);
     }
