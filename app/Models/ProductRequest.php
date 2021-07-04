@@ -14,7 +14,6 @@ class ProductRequest extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
         'title',
         'description',
         'reference_code',

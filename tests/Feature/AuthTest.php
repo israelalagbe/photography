@@ -5,16 +5,13 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testLogin()
+
+    public function testLogin(): void
     {
         $user = User::factory()->create();
 
@@ -23,16 +20,24 @@ class AuthTest extends TestCase
             'password' => 'password'
         ]);
 
-        $response->assertStatus(200)
-            ->assertJsonFragment(['email' => $user->email]);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'token',
+                    'user' => [
+                        'id',
+                        'name',
+                        'email',
+                        'role',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ]
+            ]);
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testRegister()
+    public function testRegister(): void
     {
 
         $response = $this->post('api/auth/register', [
@@ -42,7 +47,44 @@ class AuthTest extends TestCase
             'role' => 'client'
         ]);
 
-        $response->assertStatus(200)
-            ->assertJsonFragment(['email' => "test@example.com"]);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'token',
+                    'user' => [
+                        'id',
+                        'name',
+                        'email',
+                        'role',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ]
+            ]);
+    }
+
+    public function testProfile(): void
+    {
+        $user = User::factory()->create();
+        $token = Auth::login($user);
+
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer $token"
+        ])->get('api/auth/profile', ['token' => $token]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'email',
+                    'email_verified_at',
+                    'role',
+                    'created_at',
+                    'updated_at'
+                ]
+            ]);
     }
 }
