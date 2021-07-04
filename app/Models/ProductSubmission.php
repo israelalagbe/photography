@@ -13,7 +13,7 @@ class ProductSubmission extends Model
      *
      * @var array
      */
-    protected $fillable = ['image', 'thumbnail', 'product_requests_id', 'status'];
+    protected $fillable = ['image', 'thumbnail', 'product_request_id', 'status'];
 
     use HasFactory;
 

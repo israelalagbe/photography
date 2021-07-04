@@ -14,19 +14,28 @@ class ProductSubmissionController extends Controller
 {
     use UploadTrait;
     /**
-     * Get all product requests
+     * Get all product submissions
      *
-     * @param  ProductSearchRequest  $request
      */
     public function getProductSubmissions(Request $request, int $id): JsonResponse
     {
 
         $status = $request->status;
+        $query = ProductSubmission::status($status)
+            ->where(['product_request_id' => $id])
+            ->orderBy('id', 'desc');
 
-        $productRequest = ProductSubmission::status($status)->where(['product_request_id' => $id])->simplePaginate();
+        //Hide the full size image from the submissions that has not been approved
+        $productSubmissions = $query->get()
+            ->map(function ($product) {
+                if ($product->status !== 'approved') {
+                    unset($product->image);
+                }
+                return $product;
+            });
 
         return response()->json([
-            'data' => $productRequest
+            'data' => $productSubmissions
         ]);
     }
 
@@ -49,9 +58,19 @@ class ProductSubmissionController extends Controller
         $productSubmission = ProductSubmission::create([
             'image' => $url,
             'thumbnail' => $thumbnailBase64,
-            'product_requests_id' => $request->id,
+            'product_request_id' => $request->id,
             'status' => 'pending'
         ]);
+
+        return response()->json([
+            'data' => $productSubmission
+        ]);
+    }
+    public function acceptProductSubmission(Request $request, int $id)
+    {
+        $productSubmission = ProductSubmission::findOrFail($id);
+        $productSubmission->status = 'approved';
+        $productSubmission->save();
 
         return response()->json([
             'data' => $productSubmission
