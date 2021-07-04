@@ -71,7 +71,7 @@ class AuthTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token"
-        ])->get('api/auth/profile', ['token' => $token]);
+        ])->get('api/auth/profile');
 
         $response
             ->assertStatus(200)
