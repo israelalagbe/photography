@@ -9,6 +9,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "imagecow/imagecow": "^2.4",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
         "tymon/jwt-auth": "^1.0"

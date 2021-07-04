@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SubmitProductRequest;
+use Imagecow\Image;
+use Illuminate\Http\Request;
 use App\Models\ProductSubmission;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\SubmitProductRequest;
+use App\Traits\UploadTrait;
 
 class ProductSubmissionController extends Controller
 {
+    use UploadTrait;
     /**
      * Get all product requests
      *
@@ -29,15 +32,29 @@ class ProductSubmissionController extends Controller
 
     public function submitProduct(SubmitProductRequest $request): JsonResponse
     {
+
         $image = $request->file('image');
 
-        $path = Storage::putFile('public/images', $image);
+        $path = $this->handleUpload($image, 'images');
 
-        $url = url(Storage::url($path));
-        
+        $url = url($path);
+
+        $image = Image::fromFile($path);
+        $image->resize(200, 200);
+        //Saving thumbnail as base64 because it's not large
+        $thumbnailBase64 = $image->base64();
+
+
+
+        $productSubmission = ProductSubmission::create([
+            'image' => $url,
+            'thumbnail' => $thumbnailBase64,
+            'product_requests_id' => $request->id,
+            'status' => 'pending'
+        ]);
 
         return response()->json([
-            'data' => null
+            'data' => $productSubmission
         ]);
     }
 }
