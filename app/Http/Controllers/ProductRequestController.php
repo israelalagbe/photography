@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AcceptProductRequest;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\StoreProductRequest;
-use App\Models\Product;
 use App\Models\ProductRequest;
-use Dotenv\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use \Illuminate\Http\Response;
 
 class ProductRequestController extends Controller
 {
@@ -94,10 +90,6 @@ class ProductRequestController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param  AcceptProductRequest  $request
-     */
     public function acceptProductRequest(Request $request): JsonResponse
     {
         $productRequest = ProductRequest::findOrFail($request->id);
