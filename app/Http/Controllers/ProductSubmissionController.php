@@ -52,10 +52,14 @@ class ProductSubmissionController extends Controller
 
         $url = url($path);
 
-        $image = Image::fromFile($path);
-        $image->resize(200, 200);
-        //Saving thumbnail as base64 because it's not large
-        $thumbnailBase64 = $image->base64();
+        $thumbnailPath = "storage/images/" . uniqid() . ".png";
+
+        $thumbnail = Image::fromFile($path);
+        $thumbnail->resize(200, 200)
+            ->format('png')
+            ->save($thumbnailPath);
+
+        $thumbnailUrl = url($thumbnailPath);
 
         $productRequest = ProductRequest::findOrFail($request->id);
 
@@ -63,7 +67,7 @@ class ProductSubmissionController extends Controller
 
         $productSubmission = ProductSubmission::create([
             'image' => $url,
-            'thumbnail' => $thumbnailBase64,
+            'thumbnail' => $thumbnailUrl,
             'product_request_id' => $request->id,
             'status' => 'pending'
         ]);

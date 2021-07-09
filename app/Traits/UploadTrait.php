@@ -15,7 +15,7 @@ trait UploadTrait
      */
     public function handleUpload(UploadedFile $file, $directory): string
     {
-        $destinationPath = "/public/storage/$directory";
+        $destinationPath = "/public/$directory";
         $filenameWithExt = $file->getClientOriginalName();
         $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
         $extension = $file->getClientOriginalExtension();
@@ -24,6 +24,6 @@ trait UploadTrait
         if (!$uploadedFilePath) {
             throw new Exception("File not saved");
         }
-        return "storage/storage/$directory/" . $fileNameToStore;
+        return "storage/$directory/" . $fileNameToStore;
     }
 }
