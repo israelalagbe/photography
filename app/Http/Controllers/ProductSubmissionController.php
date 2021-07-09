@@ -50,12 +50,13 @@ class ProductSubmissionController extends Controller
 
         $path = $this->handleUpload($image, 'images');
 
-        $url = url($path);
+        $imageUrl = url($path);
 
         $thumbnailPath = "storage/images/" . uniqid() . ".png";
 
         $thumbnail = Image::fromFile($path);
-        $thumbnail->resize(200, 200)
+        $thumbnail->resize(150, 150)
+            ->quality(50) //Reduce the quality by 50%
             ->format('png')
             ->save($thumbnailPath);
 
@@ -66,21 +67,25 @@ class ProductSubmissionController extends Controller
         $client = User::find($productRequest->client_id);
 
         $productSubmission = ProductSubmission::create([
-            'image' => $url,
+            'image' => $imageUrl,
             'thumbnail' => $thumbnailUrl,
             'product_request_id' => $request->id,
             'status' => 'pending'
         ]);
 
-        Mail::to($client->email)->queue(new ProductSubmissionMail($client));
+        Mail::to($client->email)->queue(new ProductSubmissionMail($client, $productSubmission));
 
         return response()->json([
             'data' => $productSubmission
         ]);
     }
-    public function acceptProductSubmission(Request $request, int $id)
+    public function approveProductSubmission(Request $request, int $id)
     {
-        $productSubmission = ProductSubmission::findOrFail($id);
+        $productSubmission = ProductSubmission::where([
+            'id' => $id,
+            'client_id' => auth()->id(),
+        ])->firstOrFail();
+
         $productSubmission->status = 'approved';
         $productSubmission->save();
 

@@ -1,3 +1,8 @@
-<h1>Hello {{$user->name}}</h1>
-<p>A new project submissions has been made. Please login to you dashboard to view it.</p>
+<h4>Hello {{$user->name}}</h4>
+<p>A new project submissions has been made, the thumbnail is displayed below:</p>
+<p>
+    <img src="{{$productSubmission->thumbnail}}" alt="Project image thumbnail">
+</p>
+
+<p>Kindly login to your dashboard to approve or decline it.</p>
 <p>Thank you</p>

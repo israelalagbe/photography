@@ -44,6 +44,6 @@ Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], fun
     Route::post('{id}/submissions', "ProductSubmissionController@submitProduct")
         ->middleware('role:photographer');
 
-    Route::post('submissions/{id}/approve', "ProductSubmissionController@acceptProductSubmission")
+    Route::post('submissions/{id}/approve', "ProductSubmissionController@approveProductSubmission")
         ->middleware('role:client');
 });
