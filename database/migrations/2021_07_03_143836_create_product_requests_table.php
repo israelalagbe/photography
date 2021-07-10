@@ -22,6 +22,11 @@ class CreateProductRequestsTable extends Migration
             $table->string('reference_code')->unique();
             $table->enum('status', ['pending', 'accepted', 'completed'])->default('pending');
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('users')
+                ->onDelete('cascade')->nullable();
+            $table->foreign('photographer_id')->references('id')->on('users')
+                ->onDelete('cascade')->nullable();
         });
     }
 

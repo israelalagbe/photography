@@ -20,6 +20,9 @@ class CreateProductSubmissionsTable extends Migration
             $table->integer('product_request_id');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
+
+            $table->foreign('product_request_id')->references('id')->on('product_requests')
+                ->onDelete('cascade')->nullable();
         });
     }
 
