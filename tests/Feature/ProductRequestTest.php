@@ -114,7 +114,9 @@ class ProductRequestTest extends TestCase
 
         $token = Auth::login($user);
 
-        ProductRequest::factory()->count(2)->create();
+        ProductRequest::factory()->count(2)->create([
+            'status' => 'pending'
+        ]);
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token"
@@ -153,7 +155,6 @@ class ProductRequestTest extends TestCase
             'title' => "Apple Picture",
             'description' => "Take it from all angles"
         ]);
-
 
         $response
             ->assertStatus(200)
