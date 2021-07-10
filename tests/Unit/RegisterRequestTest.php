@@ -17,11 +17,7 @@ class RegisterRequestTest extends TestCase
         $this->formRequest = new RegisterRequest();
     }
 
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
+
     public function testValidationRules()
     {
         $this->assertEquals(

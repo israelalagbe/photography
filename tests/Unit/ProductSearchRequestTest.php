@@ -17,11 +17,7 @@ class ProductSearchRequestTest extends TestCase
         $this->formRequest = new ProductSearchRequest();
     }
 
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
+
     public function testValidationRules()
     {
         $this->assertEquals(

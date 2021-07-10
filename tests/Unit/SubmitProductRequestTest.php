@@ -2,19 +2,19 @@
 
 namespace Tests\Unit;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\ProductSubmissionController;
+use App\Http\Requests\SubmitProductRequest;
 use Tests\TestCase;
 
-class LoginRequestTest extends TestCase
+class SubmitProductRequestTest extends TestCase
 {
-    private $formRequest;
+    private SubmitProductRequest $formRequest;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->formRequest = new LoginRequest();
+        $this->formRequest = new SubmitProductRequest();
     }
 
 
@@ -22,17 +22,16 @@ class LoginRequestTest extends TestCase
     {
         $this->assertEquals(
             [
-                'email' => ['required'],
-                'password' => ['required']
+                'image' => ['required', 'file', 'mimes:jpeg,png,jpg']
             ],
             $this->formRequest->rules()
         );
     }
-    public function testUsageByAppropriateController()
+    public function testUsageByAppropriateControllers()
     {
         $this->assertActionUsesFormRequest(
-            AuthController::class,
-            'login',
+            ProductSubmissionController::class,
+            'submitProduct',
             get_class($this->formRequest)
         );
     }

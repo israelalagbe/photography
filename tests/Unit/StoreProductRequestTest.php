@@ -17,11 +17,7 @@ class StoreProductRequestTest extends TestCase
         $this->formRequest = new StoreProductRequest();
     }
 
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
+
     public function testValidationRules()
     {
         $this->assertEquals(
