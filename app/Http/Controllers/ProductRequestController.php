@@ -90,6 +90,9 @@ class ProductRequestController extends Controller
         ]);
     }
 
+    /**
+     * Accept product request by photographer
+     */
     public function acceptProductRequest(Request $request): JsonResponse
     {
         $productRequest = ProductRequest::findOrFail($request->id);

@@ -33,7 +33,7 @@ class ProductSubmissionController extends Controller
 
         //Hide the full size image from the submissions that has not been approved
         $productSubmissions = $query->get()
-            ->map(function ($product) {
+            ->map(function (ProductSubmission $product) {
                 if ($product->status !== 'approved') {
                     unset($product->image);
                 }
@@ -81,7 +81,7 @@ class ProductSubmissionController extends Controller
             'data' => $productSubmission
         ]);
     }
-    public function approveProductSubmission(Request $request, int $id)
+    public function approveProductSubmission(int $id)
     {
 
         $productSubmission = ProductSubmission::with('productRequest.client')->findOrFail($id);
@@ -102,7 +102,7 @@ class ProductSubmissionController extends Controller
         ]);
     }
 
-    public function declineProductSubmission(Request $request, int $id)
+    public function declineProductSubmission(int $id)
     {
 
         $productSubmission = ProductSubmission::with('productRequest.client')->findOrFail($id);

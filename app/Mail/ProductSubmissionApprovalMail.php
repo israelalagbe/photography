@@ -13,8 +13,8 @@ class ProductSubmissionApprovalMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $client;
-    public $productSubmission;
+    public User $client;
+    public ProductSubmission $productSubmission;
 
     /**
      * Create a new message instance.
