@@ -138,6 +138,8 @@ class ProductRequestTest extends TestCase
 
                 ]
             ]);
+
+        $this->assertDatabaseCount('product_requests', 2);
     }
 
     public function testStoreProductRequests(): void
@@ -168,5 +170,12 @@ class ProductRequestTest extends TestCase
                     'status'
                 ]
             ]);
+
+        $this->assertDatabaseHas('product_requests', [
+            'title' => "Apple Picture",
+            'description' => "Take it from all angles",
+            'client_id' => $user->id,
+            'status' => 'pending'
+        ]);
     }
 }
