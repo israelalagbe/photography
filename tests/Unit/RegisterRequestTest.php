@@ -3,10 +3,10 @@
 namespace Tests\Unit;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use Tests\TestCase;
 
-class LoginRequestTest extends TestCase
+class RegisterRequestTest extends TestCase
 {
     private $formRequest;
 
@@ -14,7 +14,7 @@ class LoginRequestTest extends TestCase
     {
         parent::setUp();
 
-        $this->formRequest = new LoginRequest();
+        $this->formRequest = new RegisterRequest();
     }
 
     /**
@@ -26,8 +26,10 @@ class LoginRequestTest extends TestCase
     {
         $this->assertEquals(
             [
-                'email' => ['required'],
-                'password' => ['required']
+                'name' => ['required'],
+                'email' => ['required', 'email', 'unique:users'],
+                'password' => ['required', 'min:6'],
+                'role' => ['required', 'in:client,photographer']
             ],
             $this->formRequest->rules()
         );
@@ -36,7 +38,7 @@ class LoginRequestTest extends TestCase
     {
         $this->assertActionUsesFormRequest(
             AuthController::class,
-            'login',
+            'register',
             get_class($this->formRequest)
         );
     }
