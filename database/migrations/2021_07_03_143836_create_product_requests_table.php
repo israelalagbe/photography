@@ -17,8 +17,8 @@ class CreateProductRequestsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('description', 1000);
-            $table->foreignId('client_id');
-            $table->foreignId('photographer_id')->nullable();
+            $table->integer('client_id');
+            $table->integer('photographer_id')->nullable();
             $table->string('reference_code')->unique();
             $table->enum('status', ['pending', 'accepted', 'completed'])->default('pending');
             $table->timestamps();
