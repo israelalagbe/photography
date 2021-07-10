@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\SubmitProductRequest;
 use App\Mail\ProductSubmissionApprovalMail;
 use App\Mail\ProductSubmissionMail;
+use App\Mail\ProductSubmissionRejectionMail;
 use App\Models\ProductRequest;
 use App\Models\User;
 use App\Traits\UploadTrait;
@@ -98,6 +99,28 @@ class ProductSubmissionController extends Controller
 
         return response()->json([
             'data' => $productSubmission
+        ]);
+    }
+
+    public function declineProductSubmission(Request $request, int $id)
+    {
+
+        $productSubmission = ProductSubmission::with('productRequest.client')->findOrFail($id);
+
+        $client = $productSubmission->productRequest->client;
+
+        if ($client->id !== auth()->id()) {
+            return response()->json(['error' => 'You do not have permission to approve this submission'], 403);
+        }
+
+        $productSubmission->status = 'rejected';
+        $productSubmission->save();
+
+        Mail::to($client->email)
+            ->queue(new ProductSubmissionRejectionMail($client, $productSubmission->productRequest));
+
+        return response()->json([
+            'message' => "Submission declined successfully!"
         ]);
     }
 }
