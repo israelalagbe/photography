@@ -17,11 +17,16 @@ class ProductSubmission extends Model
 
     use HasFactory;
 
-    public function scopeStatus(Builder $query, string $status = null)
+    public function scopeStatus(Builder $query, string $status = null): Builder
     {
         if ($status) {
             $query->where('status', '=', $status);
         }
         return $query;
+    }
+
+    public function productRequest()
+    {
+        return $this->belongsTo(ProductRequest::class);
     }
 }

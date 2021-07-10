@@ -8,6 +8,7 @@ use App\Models\ProductSubmission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\SubmitProductRequest;
+use App\Mail\ProductSubmissionApprovalMail;
 use App\Mail\ProductSubmissionMail;
 use App\Models\ProductRequest;
 use App\Models\User;
@@ -81,13 +82,19 @@ class ProductSubmissionController extends Controller
     }
     public function approveProductSubmission(Request $request, int $id)
     {
-        $productSubmission = ProductSubmission::where([
-            'id' => $id,
-            'client_id' => auth()->id(),
-        ])->firstOrFail();
+
+        $productSubmission = ProductSubmission::with('productRequest.client')->findOrFail($id);
+
+        $client = $productSubmission->productRequest->client;
+
+        if ($client->id !== auth()->id()) {
+            return response()->json(['error' => 'You do not have permission to approve this submission'], 403);
+        }
 
         $productSubmission->status = 'approved';
         $productSubmission->save();
+
+        Mail::to($client->email)->queue(new ProductSubmissionApprovalMail($client, $productSubmission));
 
         return response()->json([
             'data' => $productSubmission
