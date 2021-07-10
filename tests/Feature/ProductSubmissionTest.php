@@ -2,11 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\ProductRequest;
 use App\Models\ProductSubmission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductSubmissionTest extends TestCase
@@ -41,33 +44,41 @@ class ProductSubmissionTest extends TestCase
             ]);
     }
 
-    public function testStoreProductRequests(): void
+    public function testProductSubmission(): void
     {
 
         $user = User::factory()->create([
-            'role' => 'client'
+            'role' => 'photographer'
         ]);
+
+        ProductRequest::factory()->create();
+
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('file.png', 600, 600);
 
         $token = Auth::login($user);
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token"
-        ])->post('api/product_requests', [
-            'title' => "Apple Picture",
-            'description' => "Take it from all angles"
+        ])->post('api/product_requests/1/submissions', [
+            'image' => $file,
         ]);
-
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-
-                    'title',
-                    'description',
-                    'reference_code',
-                    'client_id',
-                    'status'
+                    'id',
+                    'image',
+                    'thumbnail',
+                    'product_request_id',
+                    'status',
+                    'status',
+                    'created_at',
+                    'updated_at'
                 ]
             ]);
+
+        $this->assertDatabaseCount('product_requests', 1);
     }
 }

@@ -54,15 +54,7 @@ class ProductSubmissionController extends Controller
 
         $imageUrl = url($path);
 
-        $thumbnailPath = "storage/images/" . uniqid() . ".png";
-
-        $thumbnail = Image::fromFile($path);
-        $thumbnail->resize(150, 150)
-            ->quality(50) //Reduce the quality by 50%
-            ->format('png')
-            ->save($thumbnailPath);
-
-        $thumbnailUrl = url($thumbnailPath);
+        $thumbnailUrl = $this->createImageThumbnail($path);
 
         $productRequest = ProductRequest::findOrFail($request->id);
 
@@ -81,6 +73,27 @@ class ProductSubmissionController extends Controller
             'data' => $productSubmission
         ]);
     }
+    private function createImageThumbnail($path)
+    {
+        //Adding this here because ImageCow can't be faked
+        if (env('APP_ENV') === 'testing') {
+            return "http://fakeurl.com/image.png";
+        }
+
+        $thumbnail = Image::fromString(Storage::disk('public')
+            ->get(str_replace('storage/', '', $path)))
+            ->resize(150, 150)
+            ->quality(50) //Reduce the quality by 50%
+            ->format('png')
+            ->getString();
+
+        $thumbnailFilename = uniqid() . ".png";
+
+        Storage::put("public/thumbnails/" . $thumbnailFilename, $thumbnail);
+
+        return url("storage/thumbnails/" . $thumbnailFilename);
+    }
+
     public function approveProductSubmission(int $id)
     {
 
