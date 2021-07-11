@@ -87,7 +87,7 @@ class ProductRequestController extends Controller
 
         return response()->json([
             'data' => $productRequest
-        ]);
+        ], 201);
     }
 
     /**

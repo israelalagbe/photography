@@ -65,7 +65,7 @@ class ProductSubmissionTest extends TestCase
             'image' => $file,
         ]);
         $response
-            ->assertStatus(200)
+            ->assertStatus(201)
             ->assertJsonStructure([
                 'data' => [
                     'id',

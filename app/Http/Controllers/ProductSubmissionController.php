@@ -71,7 +71,7 @@ class ProductSubmissionController extends Controller
 
         return response()->json([
             'data' => $productSubmission
-        ]);
+        ], 201);
     }
     private function createImageThumbnail($path)
     {

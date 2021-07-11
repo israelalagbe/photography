@@ -47,7 +47,7 @@ class AuthController extends Controller
                 'token' => $token,
                 'user' => Auth::user()
             ]
-        ]);
+        ], 201);
     }
 
     public function getProfile()
