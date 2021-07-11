@@ -40,6 +40,6 @@ class ProductRequest extends Model
 
     public function photographer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(User::class, 'photographer_id');
     }
 }
