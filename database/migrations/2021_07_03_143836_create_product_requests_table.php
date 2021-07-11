@@ -17,16 +17,16 @@ class CreateProductRequestsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('description', 1000);
-            $table->integer('client_id');
-            $table->integer('photographer_id')->nullable();
+            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('photographer_id')->nullable();
             $table->string('reference_code')->unique();
             $table->enum('status', ['pending', 'accepted', 'completed'])->default('pending');
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('users')
-                ->onDelete('cascade')->nullable();
+                ->onDelete('cascade');
             $table->foreign('photographer_id')->references('id')->on('users')
-                ->onDelete('cascade')->nullable();
+                ->onDelete('cascade');
         });
     }
 

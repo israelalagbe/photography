@@ -17,7 +17,7 @@ class CreateProductSubmissionsTable extends Migration
             $table->id();
             $table->string('image');
             $table->string('thumbnail');
-            $table->integer('product_request_id');
+            $table->unsignedBigInteger('product_request_id');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 
