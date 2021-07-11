@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class LoginRequestTest extends TestCase
 {
-    private $formRequest;
+    private LoginRequest $formRequest;
 
     protected function setUp(): void
     {

@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class RegisterRequestTest extends TestCase
 {
-    private $formRequest;
+    private RegisterRequest $formRequest;
 
     protected function setUp(): void
     {

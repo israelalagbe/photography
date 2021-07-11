@@ -62,6 +62,12 @@ class AuthTest extends TestCase
                     ]
                 ]
             ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => "John Doe",
+            'email' => "test@example.com",
+            'role' => 'client'
+        ]);
     }
 
     public function testProfile(): void
