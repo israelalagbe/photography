@@ -28,6 +28,7 @@ Route::group(['prefix' => 'auth',], function () {
 Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], function () {
 
     Route::get('/', "ProductRequestController@getProductRequests");
+    Route::get('{id}/submissions', "ProductSubmissionController@getProductSubmissions");
 
     Route::group(['middleware' => 'role:photographer'], function () {
         Route::get('/accepted', "ProductRequestController@getAcceptedProductRequests");
@@ -41,8 +42,6 @@ Route::group(['prefix' => 'product_requests', 'middleware' => ['jwt_auth']], fun
         Route::get('/client', "ProductRequestController@getClientProductRequests");
 
         Route::post('/', "ProductRequestController@storeProductRequest");
-
-        Route::get('{id}/submissions', "ProductSubmissionController@getProductSubmissions");
 
         Route::post('submissions/{id}/approve', "ProductSubmissionController@approveProductSubmission");
 
